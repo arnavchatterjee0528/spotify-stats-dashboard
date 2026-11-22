@@ -1,0 +1,13 @@
+{
+  "name": "spotify-stats-dashboard",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n server,client -c green,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "NODE_ENV=production npm start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
+  }
+}
