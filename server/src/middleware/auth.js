@@ -8,11 +8,14 @@ export function setSession(res, userId) {
   const token = jwt.sign({ uid: userId.toString() }, config.jwtSecret, { expiresIn: '30d' });
   res.cookie(COOKIE, token, {
     httpOnly: true,
+    path: '/',
     sameSite: 'lax',
     secure: config.isProd,
     maxAge: 30 * 24 * 3600 * 1000,
   });
 }
+
+export const clearSession = (res) => res.clearCookie(COOKIE, { path: '/' });
 
 export async function requireAuth(req, res, next) {
   try {

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import crypto from 'node:crypto';
 import { authorizeUrl, exchangeCode, getProfile } from '../services/spotify.js';
 import User from '../models/User.js';
-import { setSession, requireAuth, COOKIE } from '../middleware/auth.js';
+import { setSession, requireAuth, clearSession } from '../middleware/auth.js';
 import { syncUser } from '../jobs/sync.js';
 import { config } from '../config.js';
 
@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/login', (req, res) => {
   const state = crypto.randomBytes(16).toString('hex');
-  res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', maxAge: 10 * 60 * 1000 });
+  res.cookie('oauth_state', state, { httpOnly: true, path: '/', sameSite: 'lax', maxAge: 10 * 60 * 1000 });
   res.redirect(authorizeUrl(state));
 });
 
@@ -20,7 +20,7 @@ router.get('/callback', async (req, res) => {
   if (!state || state !== req.cookies.oauth_state) {
     return res.redirect(`${config.clientUrl}/?error=state_mismatch`);
   }
-  res.clearCookie('oauth_state');
+  res.clearCookie('oauth_state', { path: '/' });
   try {
     const tokens = await exchangeCode(code);
     const profile = await getProfile(tokens.access_token);
@@ -45,7 +45,7 @@ router.get('/callback', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie(COOKIE);
+  clearSession(res);
   res.json({ ok: true });
 });
 

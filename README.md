@@ -43,7 +43,7 @@ server/
 
 1. Go to <https://developer.spotify.com/dashboard> and log in.
 2. Click **Create app**. Any name and description.
-3. Under **Redirect URIs**, add exactly: `http://127.0.0.1:5173/api/auth/callback` (Spotify does not allow `localhost`).
+3. Under **Redirect URIs**, add exactly: `http://127.0.0.1:5000/api/auth/callback` (Spotify does not allow `localhost`).
 4. Under **Which API/SDKs are you planning to use?**, tick **Web API**. Save.
 5. Open **Settings** and copy the **Client ID** and **Client secret**.
 6. Open **User Management** and add the name and Spotify email of everyone who will log in (including yourself).
